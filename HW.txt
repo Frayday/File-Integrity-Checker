@@ -1,0 +1,27 @@
+cat /proc/sys/net/ipv4/ip_forward
+sudo sysctl -w net.ipv4.ip_forward=1
+sudo VBoxClient --clipboard
+
+sudo iptables -A FORWARD -j ACCEPT -m conntrack --ctstate ESTABLISHED,RELATED \ -m comment --comment "established traffic"
+sudo iptables -A FORWARD -j ACCEPT -i enp0s8 -o enp0s3 \ -m comment --comment "forward"
+sudo iptables -t nat -A POSTROUTING -o enp0s3 -j MASQUERADE \ -m comment --comment "masquerade"
+
+
+sudo iptables -L -n -v
+sudo iptables -t nat -L -n -v
+
+
+sudo iptables --policy OUTPUT DROP
+sudo iptables --policy INPUT DROP
+sudo iptables --policy FORWARD DROP
+
+sudo iptables -A FORWARD -j ACCEPT -p icmp -i enp0s8 -o enp0s3
+sudo iptables -A FORWARD -j ACCEPT -m conntrack --ctstate ESTABLISHED,RELATED
+sudo iptables -A FORWARD -j ACCEPT -p tcp -i enp0s8 -o enp0s3
+
+
+Automaatioinsinööri
+Mekaniikkasuunnittelija
+Cyber security
+
+rqy7JkeLnkWPWv@
